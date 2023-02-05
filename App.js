@@ -1,85 +1,96 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { StatusBar } from "expo-status-bar";
+import * as Font from "expo-font";
 import {
-  KeyboardAvoidingView,
   Keyboard,
-  Platform,
   TouchableWithoutFeedback,
+  Dimensions,
   View,
   ImageBackground,
-  Text,
-  TextInput,
-  TouchableOpacity,
   StyleSheet,
 } from "react-native";
 
+const customFonts = {
+  "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
+  "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
+  "Roboto-Black": require("./assets/fonts/Roboto-Black.ttf"),
+};
+
+// import LoginScreen from "./Screens/LoginScreen";
+import RegistrationScreen from "./Screens/RegistrationScreen";
+
+const initialState = {
+  email: "",
+  password: "",
+  login: "",
+};
+
 export default function App() {
+  const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [isShowPassword, setIsShowPassword] = useState(true);
+  const [isFontsLoaded, setIsFontsLoaded] = useState(false);
+  const [isDimensions, setIsDimensions] = useState(
+    Dimensions.get("window").width - 16 * 2
+  );
 
   const keyboardHide = () => {
+    console.log(state);
     setIsShowKeyboard(false);
     Keyboard.dismiss();
+    setState(initialState);
   };
 
+  const _loadFontsAsync = async () => {
+    await Font.loadAsync(customFonts);
+    setIsFontsLoaded(true);
+  };
+
+  useEffect(() => {
+    const onChange = () => {
+      const width = Dimensions.get("window").width - 16 * 2;
+      setIsDimensions(width);
+    };
+    Dimensions.addEventListener("change", onChange);
+    return () => {
+      Dimensions.removeEventListener("change", onChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    _loadFontsAsync();
+  }, [_loadFontsAsync]);
+
+  if (!isFontsLoaded) {
+    return null;
+  }
+
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require("./assets/images/bg.jpg")}
-        style={styles.imageBg}
-      >
-        <TouchableWithoutFeedback>
-          <KeyboardAvoidingView
-            behavior={Platform.OS == "ios" ? "margin" : "height"}
-          >
-            <View style={styles.formWrapper}>
-              <Text style={styles.formTitle}>Войти</Text>
-              <View
-                style={{
-                  ...styles.form,
-                  marginBottom: isShowKeyboard ? 32 : 144,
-                }}
-              >
-                <TextInput
-                  placeholder="Адрес электронной почты"
-                  placeholderTextColor="#BDBDBD"
-                  style={{ ...styles.input, marginBottom: 16 }}
-                  onFocus={() => setIsShowKeyboard(true)}
-                />
-                <TextInput
-                  secureTextEntry={isShowPassword}
-                  placeholder="Пароль"
-                  placeholderTextColor="#BDBDBD"
-                  style={{
-                    ...styles.input,
-                    marginBottom: 43,
-                    paddingRight: 102,
-                  }}
-                  onFocus={() => setIsShowKeyboard(true)}
-                />
-                <TouchableOpacity
-                  onPressIn={() => setIsShowPassword(false)}
-                  onPressOut={() => setIsShowPassword(true)}
-                >
-                  <Text style={styles.btnShowPassword}>Показать</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  style={styles.button}
-                  onPress={keyboardHide}
-                >
-                  <Text style={styles.buttonText}>Войти</Text>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Text style={styles.activeText}>
-                    Нет аккаунта? <Text>Зарегистрироваться</Text>
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
-      </ImageBackground>
-    </View>
+    <TouchableWithoutFeedback onPress={keyboardHide}>
+      <View style={styles.container}>
+        <ImageBackground
+          source={require("./assets/images/bg.jpg")}
+          style={styles.imageBg}
+        >
+          {/* <LoginScreen
+            state={state}
+            setState={setState}
+            isShowKeyboard={isShowKeyboard}
+            setIsShowKeyboard={setIsShowKeyboard}
+            isDimensions={isDimensions}
+            keyboardHide={keyboardHide}
+          /> */}
+          <RegistrationScreen
+            state={state}
+            setState={setState}
+            isShowKeyboard={isShowKeyboard}
+            setIsShowKeyboard={setIsShowKeyboard}
+            isDimensions={isDimensions}
+            keyboardHide={keyboardHide}
+          />
+        </ImageBackground>
+        <StatusBar />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -90,80 +101,7 @@ const styles = StyleSheet.create({
   },
   imageBg: {
     flex: 1,
-    resizeMode: "cover",
     justifyContent: "flex-end",
-  },
-  formWrapper: {
-    paddingTop: 32,
-    height: "auto",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    backgroundColor: "#ffffff",
-  },
-  form: {
-    paddingHorizontal: 16,
-  },
-  formTitle: {
-    marginBottom: 33,
-    // fontFamily: "Roboto",
-    fontStyle: "normal",
-    fontWeight: "500",
-    fontSize: 30,
-    lineHeight: 35,
-    textAlign: "center",
-    letterSpacing: 0.01,
-    color: "#212121",
-  },
-  input: {
-    padding: 16,
-    backgroundColor: "#F6F6F6",
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: "#E8E8E8",
-    // fontFamily: "Roboto",
-    fontStyle: "normal",
-    fontWeight: "400",
-    fontSize: 16,
-    lineHeight: 19,
-    color: "#212121",
-    textDecorationLine: "none",
-  },
-  btnShowPassword: {
-    position: "absolute",
-    right: 17,
-    top: -83,
-    // fontFamily: "Roboto-Regular",
-    fontStyle: "normal",
-    fontWeight: "400",
-    fontSize: 16,
-    lineHeight: 19,
-    color: "#1B4371",
-  },
-  button: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 16,
-    paddingVertical: 16,
-    height: 51,
-    backgroundColor: "#FF6C00",
-    borderRadius: 100,
-  },
-  buttonText: {
-    // fontFamily: "Roboto",
-    fontStyle: "normal",
-    fontWeight: "400",
-    fontSize: 16,
-    lineHeight: 19,
-    textAlign: "center",
-    color: "#FFFFFF",
-  },
-  activeText: {
-    // fontFamily: "Roboto",
-    fontStyle: "normal",
-    fontWeight: "400",
-    fontSize: 16,
-    lineHeight: 19,
-    textAlign: "center",
-    color: "#1B4371",
+    resizeMode: "cover",
   },
 });
