@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { StatusBar } from "expo-status-bar";
 import {
   KeyboardAvoidingView,
+  Keyboard,
   Platform,
+  TouchableWithoutFeedback,
   View,
   ImageBackground,
   Text,
@@ -13,49 +14,70 @@ import {
 
 export default function App() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(true);
+
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+  };
 
   return (
     <View style={styles.container}>
-      <StatusBar />
       <ImageBackground
         source={require("./assets/images/bg.jpg")}
         style={styles.imageBg}
       >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
-          <View
-            style={{
-              ...styles.formWrapper,
-              paddingBottom: isShowKeyboard ? 144 : 32,
-            }}
+        <TouchableWithoutFeedback>
+          <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "margin" : "height"}
           >
-            <Text style={styles.formTitle}>Войти</Text>
-            <View style={{ marginBottom: 16 }}>
-              <TextInput
-                placeholder="Адрес электронной почты"
-                placeholderTextColor="#BDBDBD"
-                style={styles.input}
-                onFocus={() => setIsShowKeyboard(true)}
-              />
+            <View style={styles.formWrapper}>
+              <Text style={styles.formTitle}>Войти</Text>
+              <View
+                style={{
+                  ...styles.form,
+                  marginBottom: isShowKeyboard ? 32 : 144,
+                }}
+              >
+                <TextInput
+                  placeholder="Адрес электронной почты"
+                  placeholderTextColor="#BDBDBD"
+                  style={{ ...styles.input, marginBottom: 16 }}
+                  onFocus={() => setIsShowKeyboard(true)}
+                />
+                <TextInput
+                  secureTextEntry={isShowPassword}
+                  placeholder="Пароль"
+                  placeholderTextColor="#BDBDBD"
+                  style={{
+                    ...styles.input,
+                    marginBottom: 43,
+                    paddingRight: 102,
+                  }}
+                  onFocus={() => setIsShowKeyboard(true)}
+                />
+                <TouchableOpacity
+                  onPressIn={() => setIsShowPassword(false)}
+                  onPressOut={() => setIsShowPassword(true)}
+                >
+                  <Text style={styles.btnShowPassword}>Показать</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.button}
+                  onPress={keyboardHide}
+                >
+                  <Text style={styles.buttonText}>Войти</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text style={styles.activeText}>
+                    Нет аккаунта? <Text>Зарегистрироваться</Text>
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={{ marginBottom: 43 }}>
-              <TextInput
-                secureTextEntry={true}
-                placeholder="Пароль"
-                placeholderTextColor="#BDBDBD"
-                style={styles.input}
-                onFocus={() => setIsShowKeyboard(true)}
-              />
-            </View>
-            <TouchableOpacity activeOpacity={0.5} style={styles.button}>
-              <Text style={styles.buttonText}>Войти</Text>
-            </TouchableOpacity>
-            <Text style={styles.activeText}>
-              Нет аккаунта? Зарегистрироваться
-            </Text>
-          </View>
-        </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
       </ImageBackground>
     </View>
   );
@@ -64,7 +86,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "#fff",
   },
   imageBg: {
     flex: 1,
@@ -73,13 +95,13 @@ const styles = StyleSheet.create({
   },
   formWrapper: {
     paddingTop: 32,
-    paddingHorizontal: 16,
-    // paddingBottom: 144,
-    width: "100%",
     height: "auto",
-    backgroundColor: "#ffffff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+    backgroundColor: "#ffffff",
+  },
+  form: {
+    paddingHorizontal: 16,
   },
   formTitle: {
     marginBottom: 33,
@@ -96,8 +118,8 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "#F6F6F6",
     borderWidth: 1,
-    borderColor: "#E8E8E8",
     borderRadius: 8,
+    borderColor: "#E8E8E8",
     // fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "400",
@@ -106,12 +128,23 @@ const styles = StyleSheet.create({
     color: "#212121",
     textDecorationLine: "none",
   },
+  btnShowPassword: {
+    position: "absolute",
+    right: 17,
+    top: -83,
+    // fontFamily: "Roboto-Regular",
+    fontStyle: "normal",
+    fontWeight: "400",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#1B4371",
+  },
   button: {
-    flexDirection: "column",
+    justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,
-    paddingHorizontal: 32,
     paddingVertical: 16,
+    height: 51,
     backgroundColor: "#FF6C00",
     borderRadius: 100,
   },
