@@ -1,111 +1,122 @@
 import { useState, useEffect } from "react";
-import { StatusBar } from "expo-status-bar";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Font from "expo-font";
-import {
-  Keyboard,
-  TouchableWithoutFeedback,
-  Dimensions,
-  View,
-  ImageBackground,
-  StyleSheet,
-} from "react-native";
+
+import LoginScreen from "./Screens/authScreen/LoginScreen";
+import RegistrationScreen from "./Screens/authScreen/RegistrationScreen";
+import Home from "./Screens/mainScreen/Home";
+import PostsScreen from "./Screens/mainScreen/PostsScreen";
+import CreatePostsScreen from "./Screens/mainScreen/CreatePostsScreen";
+import ProfileScreen from "./Screens/mainScreen/ProfileScreen";
+
+const AuthStack = createStackNavigator();
+const MainTab = createBottomTabNavigator();
 
 const customFonts = {
   "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
+  "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
   "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
   "Roboto-Black": require("./assets/fonts/Roboto-Black.ttf"),
 };
 
-import LoginScreen from "./Screens/LoginScreen";
-// import RegistrationScreen from "./Screens/RegistrationScreen";
-
-const initialState = {
-  email: "",
-  password: "",
-  login: "",
-  title: "",
-};
-
 export default function App() {
-  const [state, setState] = useState(initialState);
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isFontsLoaded, setIsFontsLoaded] = useState(false);
-  const [isDimensions, setIsDimensions] = useState(
-    Dimensions.get("window").width - 16 * 2
-  );
 
-  console.log("Hello GoIT");
-
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-    setState(initialState);
-  };
+  useEffect(() => {
+    _loadFontsAsync();
+  }, [_loadFontsAsync]);
 
   const _loadFontsAsync = async () => {
     await Font.loadAsync(customFonts);
     setIsFontsLoaded(true);
   };
 
-  useEffect(() => {
-    const onChange = () => {
-      const width = Dimensions.get("window").width - 16 * 2;
-      setIsDimensions(width);
-    };
-    Dimensions.addEventListener("change", onChange);
-    return () => {
-      Dimensions.removeEventListener("change", onChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    _loadFontsAsync();
-  }, [_loadFontsAsync]);
-
   if (!isFontsLoaded) {
     return null;
   }
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
-      <View style={styles.container}>
-        <ImageBackground
-          source={require("./assets/images/bg.jpg")}
-          style={styles.imageBg}
-        >
-          <LoginScreen
-            state={state}
-            setState={setState}
-            title="Войти"
-            isShowKeyboard={isShowKeyboard}
-            setIsShowKeyboard={setIsShowKeyboard}
-            isDimensions={isDimensions}
-            keyboardHide={keyboardHide}
-          />
-          {/* <RegistrationScreen
-            state={state}
-            setState={setState}
-            title="Регистрация"
-            isShowKeyboard={isShowKeyboard}
-            setIsShowKeyboard={setIsShowKeyboard}
-            isDimensions={isDimensions}
-            keyboardHide={keyboardHide}
+    <>
+      <NavigationContainer>
+        <MainTab.Navigator initialRouteName="PostsScreen">
+          {/* <MainTab.Screen
+            name="Home"
+            component={Home}
+            options={{
+              title: "Home",
+              headerStyle: {
+                backgroundColor: "ffffff",
+              },
+              headerTintColor: "#212121",
+              headerTitleStyle: {
+                fontFamily: "Roboto-Medium",
+                fontSize: 17,
+                lineHeight: 22,
+              },
+            }}
           /> */}
-        </ImageBackground>
-        <StatusBar />
-      </View>
-    </TouchableWithoutFeedback>
+          <MainTab.Screen
+            name="PostsScreen"
+            component={PostsScreen}
+            options={{
+              title: "Публикации",
+              headerStyle: {
+                backgroundColor: "ffffff",
+              },
+              headerTintColor: "#212121",
+              headerTitleStyle: {
+                fontFamily: "Roboto-Medium",
+                fontSize: 17,
+                lineHeight: 22,
+              },
+            }}
+          />
+          <MainTab.Screen
+            name="CreatePostsScreen"
+            component={CreatePostsScreen}
+            options={{
+              title: "Создать публикацию",
+              headerStyle: {
+                backgroundColor: "ffffff",
+              },
+              headerTintColor: "#212121",
+              headerTitleStyle: {
+                fontFamily: "Roboto-Medium",
+                fontSize: 17,
+                lineHeight: 22,
+              },
+            }}
+          />
+          <MainTab.Screen
+            name="ProfileScreen"
+            component={ProfileScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+        </MainTab.Navigator>
+      </NavigationContainer>
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  imageBg: {
-    flex: 1,
-    justifyContent: "flex-end",
-    resizeMode: "cover",
-  },
-});
+// auth
+
+// <AuthStack.Navigator initialRouteName="Login">
+//   <AuthStack.Screen
+//     name="Login"
+//     component={LoginScreen}
+//     options={{
+//       headerShown: false,
+//     }}
+//   />
+//   <AuthStack.Screen
+//     name="Registration"
+//     component={RegistrationScreen}
+//     options={{
+//       headerShown: false,
+//     }}
+//   />
+// </AuthStack.Navigator>;
