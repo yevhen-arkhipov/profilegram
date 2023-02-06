@@ -16,13 +16,14 @@ const customFonts = {
   "Roboto-Black": require("./assets/fonts/Roboto-Black.ttf"),
 };
 
-// import LoginScreen from "./Screens/LoginScreen";
-import RegistrationScreen from "./Screens/RegistrationScreen";
+import LoginScreen from "./Screens/LoginScreen";
+// import RegistrationScreen from "./Screens/RegistrationScreen";
 
 const initialState = {
   email: "",
   password: "",
   login: "",
+  title: "",
 };
 
 export default function App() {
@@ -33,8 +34,9 @@ export default function App() {
     Dimensions.get("window").width - 16 * 2
   );
 
+  console.log("Hello GoIT");
+
   const keyboardHide = () => {
-    console.log(state);
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     setState(initialState);
@@ -71,22 +73,24 @@ export default function App() {
           source={require("./assets/images/bg.jpg")}
           style={styles.imageBg}
         >
-          {/* <LoginScreen
+          <LoginScreen
             state={state}
             setState={setState}
-            isShowKeyboard={isShowKeyboard}
-            setIsShowKeyboard={setIsShowKeyboard}
-            isDimensions={isDimensions}
-            keyboardHide={keyboardHide}
-          /> */}
-          <RegistrationScreen
-            state={state}
-            setState={setState}
+            title="Войти"
             isShowKeyboard={isShowKeyboard}
             setIsShowKeyboard={setIsShowKeyboard}
             isDimensions={isDimensions}
             keyboardHide={keyboardHide}
           />
+          {/* <RegistrationScreen
+            state={state}
+            setState={setState}
+            title="Регистрация"
+            isShowKeyboard={isShowKeyboard}
+            setIsShowKeyboard={setIsShowKeyboard}
+            isDimensions={isDimensions}
+            keyboardHide={keyboardHide}
+          /> */}
         </ImageBackground>
         <StatusBar />
       </View>

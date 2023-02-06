@@ -12,6 +12,7 @@ import {
 export default function LoginScreen({
   state,
   setState,
+  title,
   isShowKeyboard,
   setIsShowKeyboard,
   isDimensions,
@@ -25,7 +26,7 @@ export default function LoginScreen({
       behavior={Platform.OS == "ios" ? "padding" : "height"}
     >
       <View style={styles.formWrapper}>
-        <Text style={styles.formTitle}>Войти</Text>
+        <Text style={styles.formTitle}>{title}</Text>
         <View
           style={{
             ...styles.form,

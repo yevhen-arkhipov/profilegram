@@ -14,6 +14,7 @@ import {
 export default function RegistrationScreen({
   state,
   setState,
+  title,
   isShowKeyboard,
   setIsShowKeyboard,
   isDimensions,
@@ -21,6 +22,7 @@ export default function RegistrationScreen({
 }) {
   const [isShowPassword, setIsShowPassword] = useState(true);
 
+  console.log("Hello");
   return (
     <KeyboardAvoidingView
       keyboardVerticalOffset={-108}
@@ -35,7 +37,7 @@ export default function RegistrationScreen({
             />
           </TouchableOpacity>
         </View>
-        <Text style={styles.formTitle}>Регистрация</Text>
+        <Text style={styles.formTitle}>{title}</Text>
         <View
           style={{
             ...styles.form,
