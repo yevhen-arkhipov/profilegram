@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import { TouchableOpacity, Image, StyleSheet } from "react-native";
 
 import LoginScreen from "./Screens/authScreen/LoginScreen";
 import RegistrationScreen from "./Screens/authScreen/RegistrationScreen";
@@ -15,7 +16,8 @@ const MainTab = createBottomTabNavigator();
 import { MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
 
 export default useRoute = (isAuth) => {
-  if (!isAuth) {
+  const [login, setLogin] = useState(isAuth);
+  if (!login) {
     return (
       <AuthStack.Navigator initialRouteName="Login">
         <AuthStack.Screen
@@ -32,30 +34,30 @@ export default useRoute = (isAuth) => {
             headerShown: false,
           }}
         />
+        <AuthStack.Screen
+          name="Home"
+          component={Home}
+          options={{
+            headerStyle: {
+              backgroundColor: "ffffff",
+            },
+            headerTitleAlign: "center",
+            headerTintColor: "#212121",
+            headerTitleStyle: {
+              fontFamily: "Roboto-Medium",
+              fontSize: 17,
+              lineHeight: 22,
+            },
+          }}
+        />
       </AuthStack.Navigator>
     );
   }
   return (
     <MainTab.Navigator
       initialRouteName="PostsScreen"
-      tabBarOptions={{ showLabel: false }}
+      screenOptions={{ tabBarStyle: { paddingBottom: 24, height: 83 } }}
     >
-      {/* <MainTab.Screen
-            name="Home"
-            component={Home}
-            options={{
-              title: "Home",
-              headerStyle: {
-                backgroundColor: "ffffff",
-              },
-              headerTintColor: "#212121",
-              headerTitleStyle: {
-                fontFamily: "Roboto-Medium",
-                fontSize: 17,
-                lineHeight: 22,
-              },
-            }}
-          /> */}
       <MainTab.Screen
         name="PostsScreen"
         component={PostsScreen}
@@ -69,15 +71,27 @@ export default useRoute = (isAuth) => {
               <MaterialIcons name="grid-view" size={24} color={color} />
             ),
           title: "Публикации",
-          headerStyle: {
+          tabBarActiveBackgroundColor: {
             backgroundColor: "ffffff",
           },
+          headerTitleAlign: "center",
           headerTintColor: "#212121",
           headerTitleStyle: {
             fontFamily: "Roboto-Medium",
             fontSize: 17,
             lineHeight: 22,
           },
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => setLogin(false)}
+              style={styles.logOutButton}
+            >
+              <Image
+                source={require("./assets/images/logoutIcon.png")}
+                style={styles.logOutImageIcon}
+              />
+            </TouchableOpacity>
+          ),
         }}
       />
       <MainTab.Screen
@@ -93,9 +107,10 @@ export default useRoute = (isAuth) => {
               <Ionicons name="add-sharp" size={24} color={color} />
             ),
           title: "Создать публикацию",
-          headerStyle: {
+          tabBarActiveBackgroundColor: {
             backgroundColor: "ffffff",
           },
+          headerTitleAlign: "center",
           headerTintColor: "#212121",
           headerTitleStyle: {
             fontFamily: "Roboto-Medium",
@@ -124,6 +139,17 @@ export default useRoute = (isAuth) => {
 };
 
 const styles = StyleSheet.create({
+  logOutButton: {
+    position: "absolute",
+    top: "25%",
+    right: "10%",
+    width: 24,
+    height: 24,
+    backgroundColor: "#ffffff",
+  },
+  logOutImageIcon: {
+    color: "#BDBDBD",
+  },
   activeButton: {
     justifyContent: "center",
     alignItems: "center",

@@ -50,6 +50,7 @@ export default function RegistrationScreen({ navigation }) {
     }
     setIsShowKeyboard(false);
     setState(initialState);
+    navigation.navigate("Home");
   };
 
   return (

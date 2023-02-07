@@ -25,6 +25,7 @@ export default function LoginScreen({ navigation }) {
   const [isDimensions, setIsDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
+
   const [isShowPassword, setIsShowPassword] = useState(true);
   useEffect(() => {
     const onChange = () => {
@@ -47,6 +48,7 @@ export default function LoginScreen({ navigation }) {
     }
     setIsShowKeyboard(false);
     setState(initialState);
+    navigation.navigate("Home");
   };
 
   return (
