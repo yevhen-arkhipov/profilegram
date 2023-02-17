@@ -8,6 +8,7 @@ import {
   ImageBackground,
   Dimensions,
   View,
+  Image,
   Text,
   TextInput,
   TouchableOpacity,
@@ -17,16 +18,17 @@ import {
 const initialState = {
   email: "",
   password: "",
+  login: "",
 };
 
-export default function LoginScreen({ navigation }) {
+export default function RegistrationScreen({ navigation }) {
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isDimensions, setIsDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
-
   const [isShowPassword, setIsShowPassword] = useState(true);
+
   useEffect(() => {
     const onChange = () => {
       const width = Dimensions.get("window").width - 16 * 2;
@@ -42,8 +44,8 @@ export default function LoginScreen({ navigation }) {
   };
 
   const handleSubmit = () => {
-    const { email, password } = state;
-    if (email === "" || password === "") {
+    const { login, email, password } = state;
+    if (login === "" || email === "" || password === "") {
       return;
     }
     setIsShowKeyboard(false);
@@ -59,19 +61,49 @@ export default function LoginScreen({ navigation }) {
           style={styles.imageBg}
         >
           <KeyboardAvoidingView
-            keyboardVerticalOffset={-50}
+            keyboardVerticalOffset={-70}
             behavior={Platform.OS == "android" ? "height" : "padding"}
           >
             <View style={styles.formWrapper}>
-              <Text style={styles.formTitle}>Войти</Text>
-
+              <View style={styles.avatarWrapper}>
+                <Image
+                  source={require("../../assets/images/userPhoto.png")}
+                  style={styles.avatar}
+                />
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.addImageButton}
+                >
+                  <Image
+                    source={require("../../assets/images/unionIcon.png")}
+                    style={styles.addImageIcon}
+                  />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.formTitle}>Регистрация</Text>
               <View
                 style={{
                   ...styles.form,
-                  marginBottom: isShowKeyboard ? 144 : 144,
+                  marginBottom: isShowKeyboard ? 78 : 78,
                   width: isDimensions,
                 }}
               >
+                <TextInput
+                  value={state.login}
+                  placeholder="Логин"
+                  placeholderTextColor="#BDBDBD"
+                  style={{ ...styles.input, marginBottom: 16 }}
+                  onFocus={() => setIsShowKeyboard(true)}
+                  onChangeText={(value) => {
+                    if (!value) {
+                      return;
+                    }
+                    return setState((prevState) => ({
+                      ...prevState,
+                      login: value,
+                    }));
+                  }}
+                />
                 <TextInput
                   value={state.email}
                   placeholder="Адрес электронной почты"
@@ -120,13 +152,11 @@ export default function LoginScreen({ navigation }) {
                   style={styles.button}
                   onPress={handleSubmit}
                 >
-                  <Text style={styles.buttonText}>Войти</Text>
+                  <Text style={styles.buttonText}>Зарегистрироваться</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Registration")}
-                >
+                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
                   <Text style={styles.activeText}>
-                    Нет аккаунта? <Text>Зарегистрироваться</Text>
+                    Уже есть аккаунт? <Text>Войти</Text>
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -151,11 +181,41 @@ const styles = StyleSheet.create({
   },
   formWrapper: {
     alignItems: "center",
-    paddingTop: 32,
+    paddingTop: 92,
     height: "auto",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     backgroundColor: "#ffffff",
+  },
+  avatarWrapper: {
+    position: "absolute",
+    top: -60,
+    left: "54%",
+    width: 120,
+    height: 120,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 16,
+    transform: [{ translateX: -Dimensions.get("window").width * 0.18 }],
+  },
+  avatar: {
+    width: "100%",
+  },
+  addImageButton: {
+    position: "absolute",
+    top: "65%",
+    right: "-9%",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 25,
+    height: 25,
+    backgroundColor: "#ffffff",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#FF6C00",
+  },
+  addImageIcon: {
+    color: "#FF6C00",
   },
   form: {
     //

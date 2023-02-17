@@ -28,9 +28,5 @@ export default function App() {
     return null;
   }
 
-  return (
-    <>
-      <NavigationContainer>{routing}</NavigationContainer>
-    </>
-  );
+  return <NavigationContainer>{routing}</NavigationContainer>;
 }

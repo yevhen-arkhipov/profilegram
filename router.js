@@ -1,14 +1,12 @@
-import { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { TouchableOpacity, Image, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
 
-import LoginScreen from "./Screens/authScreen/LoginScreen";
-import RegistrationScreen from "./Screens/authScreen/RegistrationScreen";
-import Home from "./Screens/mainScreen/Home";
-import PostsScreen from "./Screens/mainScreen/PostsScreen";
-import CreatePostsScreen from "./Screens/mainScreen/CreatePostsScreen";
-import ProfileScreen from "./Screens/mainScreen/ProfileScreen";
+import LoginScreen from "./Screens/authScreens/LoginScreen";
+import RegistrationScreen from "./Screens/authScreens/RegistrationScreen";
+import Home from "./Screens/mainScreens/Home";
+import CreatePostsScreen from "./Screens/mainScreens/CreatePostsScreen";
+import ProfileScreen from "./Screens/mainScreens/ProfileScreen";
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
@@ -16,10 +14,9 @@ const MainTab = createBottomTabNavigator();
 import { MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
 
 export default useRoute = (isAuth) => {
-  const [login, setLogin] = useState(isAuth);
-  if (!login) {
+  if (!isAuth) {
     return (
-      <AuthStack.Navigator initialRouteName="Login">
+      <AuthStack.Navigator>
         <AuthStack.Screen
           name="Login"
           component={LoginScreen}
@@ -34,33 +31,19 @@ export default useRoute = (isAuth) => {
             headerShown: false,
           }}
         />
-        <AuthStack.Screen
-          name="Home"
-          component={Home}
-          options={{
-            headerStyle: {
-              backgroundColor: "ffffff",
-            },
-            headerTitleAlign: "center",
-            headerTintColor: "#212121",
-            headerTitleStyle: {
-              fontFamily: "Roboto-Medium",
-              fontSize: 17,
-              lineHeight: 22,
-            },
-          }}
-        />
       </AuthStack.Navigator>
     );
   }
   return (
     <MainTab.Navigator
-      initialRouteName="PostsScreen"
-      screenOptions={{ tabBarStyle: { paddingBottom: 24, height: 83 } }}
+      initialRouteName="Home"
+      screenOptions={{
+        tabBarStyle: { paddingBottom: 24, height: 83 },
+      }}
     >
       <MainTab.Screen
-        name="PostsScreen"
-        component={PostsScreen}
+        name="Home"
+        component={Home}
         options={{
           tabBarIcon: ({ focused, color }) =>
             focused ? (
@@ -70,28 +53,8 @@ export default useRoute = (isAuth) => {
             ) : (
               <MaterialIcons name="grid-view" size={24} color={color} />
             ),
-          title: "Публикации",
-          tabBarActiveBackgroundColor: {
-            backgroundColor: "ffffff",
-          },
-          headerTitleAlign: "center",
-          headerTintColor: "#212121",
-          headerTitleStyle: {
-            fontFamily: "Roboto-Medium",
-            fontSize: 17,
-            lineHeight: 22,
-          },
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => setLogin(false)}
-              style={styles.logOutButton}
-            >
-              <Image
-                source={require("./assets/images/logoutIcon.png")}
-                style={styles.logOutImageIcon}
-              />
-            </TouchableOpacity>
-          ),
+          headerShown: false,
+          tabBarLabel: "",
         }}
       />
       <MainTab.Screen
@@ -117,6 +80,8 @@ export default useRoute = (isAuth) => {
             fontSize: 17,
             lineHeight: 22,
           },
+          tabBarLabel: "",
+          tabBarHideOnKeyboard: true,
         }}
       />
       <MainTab.Screen
@@ -132,6 +97,7 @@ export default useRoute = (isAuth) => {
               <Feather name="user" size={24} color={color} />
             ),
           headerShown: false,
+          tabBarLabel: "",
         }}
       />
     </MainTab.Navigator>
@@ -139,17 +105,6 @@ export default useRoute = (isAuth) => {
 };
 
 const styles = StyleSheet.create({
-  logOutButton: {
-    position: "absolute",
-    top: "25%",
-    right: "10%",
-    width: 24,
-    height: 24,
-    backgroundColor: "#ffffff",
-  },
-  logOutImageIcon: {
-    color: "#BDBDBD",
-  },
   activeButton: {
     justifyContent: "center",
     alignItems: "center",
