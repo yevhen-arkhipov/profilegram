@@ -2,7 +2,7 @@
 
 Take your beautiful photos and share with friends, like and leave comments.
 
-![alt text](https://i.ibb.co/Sx3QY0Q/App-QR.jpg)
+![alt text](https://i.ibb.co/F5dgCVh/app-qr.jpg)
 
 - Screenshots:
 
